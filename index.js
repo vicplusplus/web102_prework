@@ -92,46 +92,50 @@ gamesCard.innerHTML = `<h2>${GAMES_JSON.length}</h2>`;
  * total number of contributions, amount donated, and number of games on the site.
  * Skills used: functions, filter
 */
+var funded = null;
+var search = "";
 
-// show only games that do not yet have enough funding
-function filterUnfundedOnly() {
+function updateFilters(funded, search) {
     deleteChildElements(gamesContainer);
 
-    // use filter() to get a list of games that have not yet met their goal
-    let unfundedGames = GAMES_JSON.filter(game => game.pledged < game.goal);
+    // use filter() to get a list of games based on the funded parameter and search string
+    let filteredGames;
+    if (funded === true) {
+        filteredGames = GAMES_JSON.filter(game => game.pledged >= game.goal && game.name.toLowerCase().includes(search.toLowerCase()));
+    } else if (funded === false) {
+        filteredGames = GAMES_JSON.filter(game => game.pledged < game.goal && game.name.toLowerCase().includes(search.toLowerCase()));
+    } else {
+        filteredGames = GAMES_JSON.filter(game => game.name.toLowerCase().includes(search.toLowerCase()));
+    }
 
-    // use the function we previously created to add the unfunded games to the DOM
-    addGamesToPage(unfundedGames);
-}
-
-// show only games that are fully funded
-function filterFundedOnly() {
-    deleteChildElements(gamesContainer);
-
-    // use filter() to get a list of games that have met or exceeded their goal
-    let fundedGames = GAMES_JSON.filter(game => game.pledged >= game.goal);
-
-    // use the function we previously created to add unfunded games to the DOM
-    addGamesToPage(fundedGames);
-}
-
-// show all games
-function showAllGames() {
-    deleteChildElements(gamesContainer);
-
-    // add all games from the JSON data to the DOM
-    addGamesToPage(GAMES_JSON);
+    // use the function we previously created to add the filtered games to the DOM
+    addGamesToPage(filteredGames);
 }
 
 // select each button in the "Our Games" section
 const unfundedBtn = document.getElementById("unfunded-btn");
 const fundedBtn = document.getElementById("funded-btn");
 const allBtn = document.getElementById("all-btn");
+const searchBar = document.getElementById("search-bar");
+
 
 // add event listeners with the correct functions to each button
-unfundedBtn.addEventListener("click", filterUnfundedOnly);
-fundedBtn.addEventListener("click", filterFundedOnly);
-allBtn.addEventListener("click", showAllGames);
+unfundedBtn.addEventListener("click", () => {
+    funded = false;
+    updateFilters(funded, search);
+});
+fundedBtn.addEventListener("click", () => {
+    funded = true;
+    updateFilters(funded, search);
+});
+allBtn.addEventListener("click", () => {
+    funded = null;
+    updateFilters(funded, search);
+});
+searchBar.addEventListener("keyup", () => {
+    search = searchBar.value;
+    updateFilters(funded, search);
+});
 
 
 /*************************************************************************************

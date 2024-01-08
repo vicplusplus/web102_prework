@@ -32,7 +32,9 @@ body {
     text-align: center;
 }
 
-#num-contributions, #total-raised, #num-games {
+#num-contributions,
+#total-raised,
+#num-games {
     font-size: 50px;
 }
 
@@ -62,8 +64,24 @@ body {
     box-shadow: 0 0 30px lightblue;
 }
 
+#search-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#search-spacer {
+    width: 15%;
+}
+
 #button-container {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+}
+
+#search-bar {
+    width: 15%;
 }
 
 button {
